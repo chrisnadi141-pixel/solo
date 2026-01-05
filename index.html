@@ -42,11 +42,7 @@ body{
 }
 
 /* ALAMAT BERJALAN */
-#alamatWrapper{
-  overflow:hidden;
-  white-space:nowrap;
-  margin-top:6px;
-}
+#alamatWrapper{overflow:hidden;white-space:nowrap;margin-top:6px}
 #alamatMasjid{
   display:inline-block;
   padding-left:100%;
@@ -85,10 +81,7 @@ body{
   margin:15px auto;
   text-align:center;
 }
-#countdown{
-  font-size:2rem;
-  font-weight:700;
-}
+#countdown{font-size:2rem;font-weight:700}
 
 /* TABLE */
 table{
@@ -98,10 +91,7 @@ table{
   border-collapse:collapse;
   font-size:1.4rem;
 }
-th,td{
-  padding:12px;
-  background:rgba(0,0,0,.4);
-}
+th,td{padding:12px;background:rgba(0,0,0,.4)}
 
 /* MARQUEE */
 #marqueeBox{
@@ -133,7 +123,7 @@ th,td{
   <div class="header-center">
     <div id="masjidName">MASJID JAMI'<br>KAMPUNG SEWU</div>
     <div id="alamatWrapper">
-      <div id="alamatMasjid">Jl.Gotong Royong,Sewu,Kec.Jebres,Surakarta</div>
+      <div id="alamatMasjid">Jl. Gotong Royong, Sewu, Kec. Jebres, Surakarta</div>
     </div>
   </div>
 
@@ -171,7 +161,7 @@ th,td{
 <!-- RUNNING TEXT -->
 <div id="marqueeBox">
 <span id="marqueeText">
-Selamat datang di Masjid Jami' KAMPUNG SEWU — Sholat tepat waktu lebih utama —
+Selamat datang di Masjid Jami' Kampung Sewu — Sholat tepat waktu lebih utama —
 </span>
 </div>
 
@@ -196,29 +186,41 @@ setInterval(()=>{
   ).format(n).replace("AH","H")
 },1000)
 
-/* HARI BESAR ISLAM */
+/* =======================
+   HARI BESAR ISLAM (FIX)
+   ======================= */
 const hariBesar=[
-{n:"Isra Mi'raj Nabi ﷺ",m:1,d:27},
-{n:"Awal Ramadhan",m:3,d:1},
-{n:"Nuzulul Qur'an",m:3,d:17},
-{n:"Idul Fitri",m:4,d:10},
-{n:"Idul Adha",m:6,d:17},
-{n:"Tahun Baru Islam",m:7,d:7},
-{n:"Maulid Nabi ﷺ",m:9,d:16}
+  {n:"Isra Mi'raj Nabi (ﷺ)",m:1,d:16},
+  {n:"Awal Ramadhan",m:2,d:19},
+  {n:"Nuzulul Qur'an",m:3,d:07},
+  {n:"Idul Fitri",m:3,d:20},
+  {n:"Idul Adha",m:5,d:27},
+  {n:"Tahun Baru Islam",m:6,d:16},
+  {n:"Maulid Nabi (ﷺ)",m:8,d:25}
 ]
 
 function updateHariBesar(){
   const now=new Date()
-  let dekat=null,sel=9999
+  now.setHours(0,0,0,0)
+
+  let dekat=null
+  let sel=Infinity
+
   hariBesar.forEach(h=>{
     let t=new Date(now.getFullYear(),h.m-1,h.d)
-    if(t<now)t.setFullYear(t.getFullYear()+1)
-    let s=Math.ceil((t-now)/86400000)
+    t.setHours(0,0,0,0)
+    if(t<now) t.setFullYear(t.getFullYear()+1)
+
+    const s=Math.round((t-now)/86400000)
     if(s<sel){sel=s;dekat=h}
   })
-  hariBesarText.textContent=`Menuju ${dekat.n} — ${sel} hari lagi`
+
+  hariBesarText.textContent =
+    sel===0 ? `Hari ini ${dekat.n}` :
+    `Menuju ${dekat.n} — ${sel} hari lagi`
 }
 updateHariBesar()
+setInterval(updateHariBesar,3600000)
 
 /* JADWAL SHOLAT + COUNTDOWN */
 let jadwal=null
